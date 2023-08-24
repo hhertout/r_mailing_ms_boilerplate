@@ -1,3 +1,6 @@
+use mailer;
+
 fn main() {
-    println!("Hello, world!");
+    dotenvy::dotenv().ok();
+    mailer::test_crate();
 }

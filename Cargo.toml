@@ -12,5 +12,5 @@ members = [".", "./services/mailer/"]
 actix-web = "4.3.1"
 dotenvy = "0.15.7"
 mailer = {path = "services/mailer"}
-serde = { version = "0.12", features = ["derive"] }
+serde = { version = "1.0.186", features = ["derive"] }
 tokio = "1.32.0"
