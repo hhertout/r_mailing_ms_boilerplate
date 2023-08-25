@@ -9,3 +9,8 @@ path = "src/lib.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+handlebars = "4.3.7"
+lettre = { version = "0.10.4", features = ["tokio1", "tokio1-native-tls"] }
+serde = { version = "1.0.187", features = ["derive"] }
+serde_json = "1.0.105"
+tokio = { version = "1.32.0", features = ["full"] }
