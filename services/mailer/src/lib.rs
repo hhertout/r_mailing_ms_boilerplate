@@ -1,12 +1,19 @@
+use core::panic;
+
 use crate::config::Config;
 use handlebars::Handlebars;
 use handlebars::RenderError;
+use lettre::message::header::ContentType;
+use lettre::AsyncTransport;
+use lettre::Message;
 use lettre::{transport::smtp::authentication::Credentials, AsyncSmtpTransport, Tokio1Executor};
 
 pub mod config;
 
-pub struct EmailData {
-    text: String,
+pub struct EmailInfo {
+    to: String,
+    subject: String,
+    template_name: String,
 }
 
 pub struct Mailer {
@@ -15,7 +22,9 @@ pub struct Mailer {
 
 impl Mailer {
     pub fn new() -> Mailer {
-        Mailer { config: Config::new() }
+        Mailer {
+            config: Config::new(),
+        }
     }
 
     pub fn new_transporter(
@@ -48,7 +57,7 @@ impl Mailer {
     pub fn render_templates<E>(
         &self,
         subject: &str,
-        _data: Option<E>,
+        _data: E,
         template_name: &str,
     ) -> Result<String, RenderError> {
         let handlebars = Handlebars::new();
@@ -60,6 +69,30 @@ impl Mailer {
         let content_template = handlebars.render(template_name, &template_data);
         match content_template {
             Ok(c) => Ok(c),
+            Err(e) => Err(e),
+        }
+    }
+
+    pub async fn send_email<E>(
+        &self,
+        info: EmailInfo,
+        data: E,
+    ) -> Result<(), lettre::transport::smtp::Error> {
+        let html_template = self
+            .render_templates(&info.subject, data, &info.template_name)
+            .unwrap_or_else(|_| panic!("Failed to parse template"));
+        let email = Message::builder()
+            .to(format!("<{}>", &info.to).parse().unwrap())
+            .subject(info.subject)
+            .header(ContentType::TEXT_HTML)
+            .body(html_template)
+            .unwrap_or_else(|_| panic!("Failed to create message"));
+        let transporter = self.new_transporter();
+        match transporter {
+            Ok(t) => {
+                t.send(email).await.unwrap();
+                Ok(())
+            }
             Err(e) => Err(e),
         }
     }
