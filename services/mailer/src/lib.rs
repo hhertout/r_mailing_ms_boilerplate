@@ -14,8 +14,8 @@ pub struct Mailer {
 }
 
 impl Mailer {
-    pub fn new(config: Config) -> Mailer {
-        Mailer { config }
+    pub fn new() -> Mailer {
+        Mailer { config: Config::new() }
     }
 
     pub fn new_transporter(
