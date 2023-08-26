@@ -1,9 +1,13 @@
 services:
     mailer:
+        container_name: mailer
         build: .
+        restart: always
         ports:
             - 4000:4000
         volumes:
-          - mailer:/app
+          - .:/app
+        env_file:
+            - .env
 volumes:
     mailer:
