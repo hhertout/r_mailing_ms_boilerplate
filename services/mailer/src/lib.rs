@@ -40,6 +40,8 @@ impl Mailer {
         }
     }
 
+    // TODO - Check if data sent is valid
+
     pub fn render_templates<E>(
         &self,
         subject: &str,
