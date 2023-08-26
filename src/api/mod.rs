@@ -1,10 +1,19 @@
 use std::io::Error;
 
-use actix_web::{middleware::Logger, App, HttpServer, web::{ServiceConfig, Data}};
+use ::mailer::Mailer;
+use actix_web::{
+    middleware::Logger,
+    web::{Data, ServiceConfig},
+    App, HttpServer,
+};
 
 pub mod mailer;
 
 use crate::api::mailer::*;
+
+pub struct AppState {
+    pub mailer: Mailer,
+}
 
 fn router(cfg: &mut ServiceConfig) {
     cfg.service(hello_world);
@@ -16,11 +25,14 @@ pub async fn init() -> Result<(), Error> {
 
     println!("🚀 Server currently running at http://{}:{}/", uri, port);
     HttpServer::new(move || {
-        App::new().wrap(Logger::new(
-            "Request => %a \"%r\"; status => %s; time => %Dms",
-        ))
-        .app_data(Data::new(init_mailer()))
-        .configure(router)
+        App::new()
+            .wrap(Logger::new(
+                "Request => %a \"%r\"; status => %s; time => %Dms",
+            ))
+            .app_data(Data::new(AppState {
+                mailer: Mailer::new(),
+            }))
+            .configure(router)
     })
     .bind((uri.as_str(), port.as_str().parse().unwrap()))?
     .run()
