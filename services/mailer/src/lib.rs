@@ -80,12 +80,12 @@ impl Mailer {
         to: String,
         subject: String,
         template_name: String,
-        data: E,
+        template_data: E,
     ) -> Result<(), lettre::transport::smtp::Error>
     where
         E: serde::ser::Serialize,
     {
-        let html_template = self.render_templates(data, &template_name).unwrap();
+        let html_template = self.render_templates(template_data, &template_name).unwrap();
         let email_template = Message::builder()
             .from("NoBody <nobody@domain.tld>".parse().unwrap())
             .to(Mailbox::new(None, to.as_str().parse::<Address>().unwrap()))
