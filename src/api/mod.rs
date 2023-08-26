@@ -27,7 +27,7 @@ pub async fn init() -> Result<(), Error> {
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::new(
-                "Request => %a \"%r\"; status => %s; time => %Dms",
+                "Request => %s; %a \"%r\" | time => %Dms",
             ))
             .app_data(Data::new(AppState {
                 mailer: Mailer::new(),
