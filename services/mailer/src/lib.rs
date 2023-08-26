@@ -17,7 +17,7 @@ pub struct EmailInfo {
 }
 
 pub struct Mailer {
-    config: Config,
+    pub config: Config,
 }
 
 impl Mailer {
