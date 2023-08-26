@@ -42,12 +42,10 @@ impl Mailer {
 
     // TODO - Check if data sent is valid
 
-    pub fn render_templates<E>(
-        &self,
-        subject: &str,
-        _data: E,
-        template_name: &str,
-    ) -> Result<String, RenderError> {
+    pub fn render_templates<E>(&self, data: E, template_name: &str) -> Result<String, RenderError>
+    where
+        E: serde::ser::Serialize,
+    {
         let mut handlebars = Handlebars::new();
         //self.render_base_templates(handlebars.to_owned(), "helloworld");
         handlebars
@@ -69,9 +67,7 @@ impl Mailer {
             )
             .unwrap_or_else(|_| panic!("Error : Wrong path for base layout path"));
 
-        let template_data = serde_json::json!({
-            "subject": subject.split_whitespace().next().unwrap(),
-        });
+        let template_data = serde_json::json!(data);
         let content_template = handlebars.render(template_name, &template_data);
         match content_template {
             Ok(c) => Ok(c),
@@ -85,10 +81,11 @@ impl Mailer {
         subject: String,
         template_name: String,
         data: E,
-    ) -> Result<(), lettre::transport::smtp::Error> {
-        let html_template = self
-            .render_templates(&subject, data, &template_name)
-            .unwrap();
+    ) -> Result<(), lettre::transport::smtp::Error>
+    where
+        E: serde::ser::Serialize,
+    {
+        let html_template = self.render_templates(data, &template_name).unwrap();
         let email_template = Message::builder()
             .from("NoBody <nobody@domain.tld>".parse().unwrap())
             .to(Mailbox::new(None, to.as_str().parse::<Address>().unwrap()))
