@@ -1,10 +1,10 @@
-use actix_web::{post, Result, Responder};
+use actix_web::{get, Result, Responder, web};
 use mailer::Mailer;
 use mailer::config::Config;
 
-#[post("/ping")]
+#[get("/ping")]
 pub async fn hello_world() -> Result<impl Responder> {
-    Ok("hello")
+    Ok(web::Json("Hello"))
 }
 
 pub fn init_mailer() -> Mailer {
