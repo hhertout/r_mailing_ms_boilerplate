@@ -32,9 +32,9 @@ pub fn env_host_test() {
 }
 #[test]
 pub fn env_port_test() {
-    let test_host = "25";
-    std::env::set_var("SMTP_HOST", test_host);
-    assert_eq!(std::env::var("SMTP_HOST").unwrap(), test_host.to_string());
+    let test_port = "25";
+    std::env::set_var("SMTP_PORT", test_port);
+    assert_eq!(std::env::var("SMTP_PORT").unwrap(), test_port.to_string());
 }
 #[test]
 pub fn config_new() {
