@@ -1,6 +1,7 @@
 use std::{io::Result, env};
 
 pub mod api;
+pub mod config;
 
 #[actix_web::main]
 async fn main() -> Result<()>{

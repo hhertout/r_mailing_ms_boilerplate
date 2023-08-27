@@ -6,6 +6,7 @@ use actix_web::{
     web::{Data, ServiceConfig},
     App, HttpServer,
 };
+use crate::config;
 
 pub mod mailer;
 
@@ -29,6 +30,7 @@ pub async fn init() -> Result<(), Error> {
             .wrap(Logger::new(
                 "Request => %s; %a \"%r\" | time => %Dms",
             ))
+            .wrap(config::cors::config_cors())
             .app_data(Data::new(AppState {
                 mailer: Mailer::new(),
             }))
