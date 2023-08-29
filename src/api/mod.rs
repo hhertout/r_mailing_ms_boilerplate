@@ -24,7 +24,7 @@ pub async fn init() -> Result<(), Error> {
     let uri = std::env::var("SERVER_URI").unwrap();
     let port = std::env::var("SERVER_PORT").unwrap();
 
-    println!("🚀 Server currently running at http://{}:{}/", uri, port);
+    println!("🚀 Server starting at http://{}:{}/", uri, port);
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::new(
