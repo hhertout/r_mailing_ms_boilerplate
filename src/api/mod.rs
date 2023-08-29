@@ -32,7 +32,7 @@ pub async fn init() -> Result<(), Error> {
             ))
             .wrap(config::cors::config_cors())
             .app_data(Data::new(AppState {
-                mailer: Mailer::new(),
+                mailer: Mailer::new(None),
             }))
             .configure(router)
     })

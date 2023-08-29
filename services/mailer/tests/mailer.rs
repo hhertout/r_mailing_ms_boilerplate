@@ -13,7 +13,7 @@ fn mailer_new() {
     std::env::set_var("SMTP_USER", user);
     std::env::set_var("SMTP_PASSWORD", password);
 
-    let mailer = Mailer::new();
+    let mailer = Mailer::new(None);
 
     assert_eq!(mailer.config.from, from);
     assert_eq!(mailer.config.user, user);

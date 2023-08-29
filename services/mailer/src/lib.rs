@@ -18,10 +18,13 @@ pub struct Mailer {
 }
 
 impl Mailer {
-    pub fn new() -> Mailer {
+    pub fn new(template_path: Option<String>) -> Mailer {
         Mailer {
             config: Config::new(),
-            template_path: String::from("services/mailer/templates"),
+            template_path: match template_path {
+                Some(path) => path,
+                None => String::from("services/mailer/templates"),
+            },
         }
     }
 
@@ -84,7 +87,9 @@ impl Mailer {
     where
         E: serde::ser::Serialize,
     {
-        let html_template = self.render_templates(template_data, &template_name).unwrap();
+        let html_template = self
+            .render_templates(template_data, &template_name)
+            .unwrap();
         let email_template = Message::builder()
             .from("NoBody <nobody@domain.tld>".parse().unwrap())
             .to(Mailbox::new(None, to.as_str().parse::<Address>().unwrap()))
