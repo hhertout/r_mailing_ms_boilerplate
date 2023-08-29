@@ -38,8 +38,6 @@ pub fn handlebars_register_template_success() {
     assert!(result.is_ok());
 }
 
-// TODO specifiq use case test for mailer
-
 #[test]
 pub fn test_handlebar_render_mailer_template() {
     let from = "noreply@test.fr";
