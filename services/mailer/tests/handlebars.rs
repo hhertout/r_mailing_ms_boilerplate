@@ -1,4 +1,5 @@
 use handlebars::Handlebars;
+use mailer::Mailer;
 use serde::Serialize;
 
 // Base handlebar tests
@@ -32,10 +33,36 @@ pub fn handlebars_register_template_fail() {
 #[test]
 pub fn handlebars_register_template_success() {
     let mut handlebars = Handlebars::new();
-    let result = handlebars
-        .register_template_file("test", "./tests/templates/test.hbs");
+    let result = handlebars.register_template_file("test", "./tests/templates/test.hbs");
 
     assert!(result.is_ok());
 }
 
 // TODO specifiq use case test for mailer
+
+#[test]
+pub fn test_handlebar_render_mailer_template() {
+    let from = "noreply@test.fr";
+    let host = "localhost";
+    let port = "25";
+    let user = "toto";
+    let password = "password";
+    std::env::set_var("SMTP_FROM", from);
+    std::env::set_var("SMTP_HOST", host);
+    std::env::set_var("SMTP_PORT", port);
+    std::env::set_var("SMTP_USER", user);
+    std::env::set_var("SMTP_PASSWORD", password);
+
+    let template_path = String::from("tests/templates");
+    let mailer = Mailer::new(Some(template_path));
+
+    #[derive(Serialize)]
+    struct Data {
+        world: String,
+    }
+    let data = Data {
+        world: String::from("World"),
+    };
+    let result = mailer.render_templates(data, "test");
+    assert!(result.is_ok());
+}
