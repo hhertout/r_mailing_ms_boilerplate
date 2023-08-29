@@ -90,8 +90,9 @@ impl Mailer {
         let html_template = self
             .render_templates(template_data, &template_name)
             .unwrap();
+        // TODO handle the from name - to set in config and provide by env variable ?
         let email_template = Message::builder()
-            .from("NoBody <nobody@domain.tld>".parse().unwrap())
+            .from(Mailbox::new(None, self.config.from.parse::<Address>().unwrap()))
             .to(Mailbox::new(None, to.as_str().parse::<Address>().unwrap()))
             .subject(subject)
             .header(ContentType::TEXT_HTML)
