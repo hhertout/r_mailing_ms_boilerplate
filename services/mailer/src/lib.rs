@@ -47,7 +47,6 @@ impl Mailer {
         E: serde::ser::Serialize,
     {
         let mut handlebars = Handlebars::new();
-        //self.render_base_templates(handlebars.to_owned(), "helloworld");
         handlebars
             .register_template_file(
                 template_name,
