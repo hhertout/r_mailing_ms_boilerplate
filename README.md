@@ -93,6 +93,11 @@ To start docker, just run the following command :
 ## Dev specs
 
 #### Requirements:
-- Dev -> Node js & npm
 
-To watch change in your code, run <code>npx nodemon --watch src -e rs --exec cargo run</code>.
+- Without docker : Node js & npm
+
+To run the app : 
+- ```cargo run```
+
+To watch change in your code, run 
+- ```npx nodemon --watch src -e rs --exec cargo run```.
