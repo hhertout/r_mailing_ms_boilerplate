@@ -16,7 +16,10 @@ pub fn env_user_test() {
 pub fn env_password_test() {
     let test_password = "test";
     std::env::set_var("SMTP_PASSWORD", test_password);
-    assert_eq!(std::env::var("SMTP_PASSWORD").unwrap(), test_password.to_string());
+    assert_eq!(
+        std::env::var("SMTP_PASSWORD").unwrap(),
+        test_password.to_string()
+    );
 }
 #[test]
 pub fn env_host_test() {
@@ -64,6 +67,7 @@ pub fn config_new_without_from_name() {
     let user = "toto";
     let password = "password";
     std::env::set_var("SMTP_FROM", from);
+    std::env::remove_var("SMTP_FROM_NAME");
     std::env::set_var("SMTP_HOST", host);
     std::env::set_var("SMTP_PORT", port);
     std::env::set_var("SMTP_USER", user);
