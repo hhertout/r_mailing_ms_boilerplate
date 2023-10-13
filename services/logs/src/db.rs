@@ -37,7 +37,7 @@ impl MailerDb {
         let _ = sqlx::query(
             "CREATE TABLE IF NOT EXISTS `logs` (
                 `_id` integer primary key AUTOINCREMENT not null,
-                `method` varchar(255) not null,
+                `subject` varchar(255) not null,
                 `to` varchar(255) not null, 
                 `date` date not null, 
                 `success` boolean not null
