@@ -3,8 +3,8 @@ services:
         container_name: mailer
         build:
             context: .
-            # dockerfile: Dockerfile # uncomment this line for production
-            dockerfile: Dockerfile.dev
+            dockerfile: dev.dockerfile
+            # dockerfile: prod.dockerfile # uncomment this line for production build
         restart: always
         ports:
             - 4000:4000
@@ -12,5 +12,3 @@ services:
           - .:/usr/src/app
         env_file:
             - .env
-volumes:
-    mailer:

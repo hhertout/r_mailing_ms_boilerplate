@@ -1,6 +1,7 @@
 use core::panic;
 
 use crate::config::Config;
+use chrono::Local;
 use handlebars::Handlebars;
 use handlebars::RenderError;
 use lettre::message::header::ContentType;
@@ -9,6 +10,8 @@ use lettre::Address;
 use lettre::AsyncTransport;
 use lettre::Message;
 use lettre::{transport::smtp::authentication::Credentials, AsyncSmtpTransport, Tokio1Executor};
+use logs::LogsRequest;
+use logs::MailerLogs;
 
 pub mod config;
 
@@ -96,7 +99,7 @@ impl Mailer {
                 self.config.from.parse::<Address>().unwrap(),
             ))
             .to(Mailbox::new(None, to.as_str().parse::<Address>().unwrap()))
-            .subject(subject)
+            .subject(subject.clone())
             .header(ContentType::TEXT_HTML)
             .body(html_template);
         let email = match email_template {
@@ -106,10 +109,41 @@ impl Mailer {
         let transporter = self.new_transporter();
         match transporter {
             Ok(t) => {
-                t.send(email).await.unwrap();
+                match t.send(email).await {
+                    Ok(_) => {
+                        let data = LogsRequest {
+                            subject,
+                            to,
+                            date: Local::now().to_string(),
+                            success: true,
+                            error_desc: None
+                        };
+                        let _ = MailerLogs::new().await.insert_one(&data).await;
+                    }
+                    Err(e) => {
+                        let data = LogsRequest {
+                            subject,
+                            to,
+                            date: Local::now().to_string(),
+                            success: false,
+                            error_desc: Some(e.to_string())
+                        };
+                        let _ = MailerLogs::new().await.insert_one(&data).await;
+                    }
+                }
                 Ok(())
             }
-            Err(e) => Err(e),
+            Err(e) => {
+                let data = LogsRequest {
+                    subject,
+                    to,
+                    date: Local::now().to_string(),
+                    success: false,
+                    error_desc: Some(e.to_string())
+                };
+                let _ = MailerLogs::new().await.insert_one(&data).await;
+                Err(e)
+            }
         }
     }
 }

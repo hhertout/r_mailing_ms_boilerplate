@@ -8,17 +8,19 @@ pub mod db;
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct Logs {
     _id: u16,
-    method: String,
+    subject: String,
     to: String,
     date: String,
     success: bool,
+    error_desc: Option<String>
 }
 
 pub struct LogsRequest {
-    pub method: String,
+    pub subject: String,
     pub to: String,
     pub date: String,
     pub success: bool,
+    pub error_desc: Option<String>
 }
 
 #[derive(Clone)]
@@ -40,13 +42,14 @@ impl MailerLogs {
     }
     pub async fn insert_one(&self, logs: &LogsRequest) -> Result<(), sqlx::Error> {
         let res = sqlx::query(
-            "INSERT INTO `logs` (`method`, `to`, `date`, `success`)
-            VALUES ($1, $2, $3, $4)",
+            "INSERT INTO `logs` (`subject`, `to`, `date`, `success`, `error_desc`)
+            VALUES ($1, $2, $3, $4, $5)",
         )
-        .bind(&logs.method)
+        .bind(&logs.subject)
         .bind(&logs.to)
         .bind(&logs.date)
         .bind(&logs.success)
+        .bind(&logs.error_desc)
         .execute(&self.db_pool)
         .await;
 
