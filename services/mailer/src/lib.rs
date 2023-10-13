@@ -115,7 +115,7 @@ impl Mailer {
                             subject,
                             to,
                             date: Local::now().to_string(),
-                            success: true
+                            success: true,
                         };
                         let _ = MailerLogs::new().await.insert_one(&data).await;
                     }
@@ -124,14 +124,23 @@ impl Mailer {
                             subject,
                             to,
                             date: Local::now().to_string(),
-                            success: false
+                            success: false,
                         };
                         let _ = MailerLogs::new().await.insert_one(&data).await;
                     }
                 }
                 Ok(())
             }
-            Err(e) => Err(e),
+            Err(e) => {
+                let data = LogsRequest {
+                    subject,
+                    to,
+                    date: Local::now().to_string(),
+                    success: false,
+                };
+                let _ = MailerLogs::new().await.insert_one(&data).await;
+                Err(e)
+            }
         }
     }
 }
