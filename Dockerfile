@@ -1,6 +1,8 @@
-FROM rust:latest
+FROM rust:latest-alpine
 
 WORKDIR /usr/src/app
+
+RUN apk --update-cache add sqlite
 
 COPY . .
 

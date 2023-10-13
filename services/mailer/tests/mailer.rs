@@ -20,9 +20,11 @@ fn mailer_new() {
     assert_eq!(mailer.config.password, password);
     assert_eq!(mailer.config.host, host);
     assert_eq!(mailer.config.port, port.parse::<u16>().unwrap());
-    assert_eq!(mailer.template_path, String::from("services/mailer/templates"));
+    assert_eq!(
+        mailer.template_path,
+        String::from("services/mailer/templates")
+    );
 }
-
 
 #[test]
 fn mailer_new_with_repo() {
