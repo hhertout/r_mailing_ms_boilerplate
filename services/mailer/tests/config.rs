@@ -41,8 +41,6 @@ pub fn config_new_without_from_name() {
     env::set_var("SMTP_USER", user);
     env::set_var("SMTP_PASSWORD", password);
 
-    println!("{:?}", env::var("SMTP_FROM_NAME"));
-
     let config = Config::new();
     assert_eq!(config.from, from);
     assert_eq!(config.user, user);
