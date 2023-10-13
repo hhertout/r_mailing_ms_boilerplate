@@ -40,7 +40,9 @@ async fn hello_world(
         .await;
 
     match result {
-        Ok(()) => Ok(web::Json(ResponseSuccess {message: String::from("Email successfully sent")})),
+        Ok(()) => Ok(web::Json(ResponseSuccess {
+            message: String::from("Email successfully sent"),
+        })),
         Err(e) => Err(ErrorInternalServerError(e)),
     }
 }
