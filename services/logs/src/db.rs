@@ -40,7 +40,8 @@ impl MailerDb {
                 `subject` varchar(255) not null,
                 `to` varchar(255) not null, 
                 `date` date not null, 
-                `success` boolean not null
+                `success` boolean not null,
+                `error_desc` text
         );",
         )
         .execute(pool)
