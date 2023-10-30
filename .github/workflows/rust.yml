@@ -8,6 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  DB_URL: ${{ secrets.DB_URL }}
 
 jobs:
   tests:
