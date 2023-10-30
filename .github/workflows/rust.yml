@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Tests
-        run: cargo test --all -- --test-threads=1
+        run: cargo test --all
 
   build:
     runs-on: ubuntu-latest
