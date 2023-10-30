@@ -52,23 +52,26 @@ struct ResponseSuccess { // define the response struct
     message: String,
 }
 
-#[post("/ping")] // define the endpoint
+#[post("/ping")]
 async fn hello_world(
-    state: web::Data<AppState>, // get the global state
-    request: web::Json<Req>, // get the entering request and deserialize it front Req struct
+    state: web::Data<AppState>,
+    request: web::Json<Req>,
 ) -> Result<impl Responder> {
     let result = state
         .mailer
         .send_email(
-            request.to.to_owned(), // to
-            request.subject.to_owned(), // subject
-            String::from("helloworld"), // template name
-            request.data.to_owned(), // template data
+            state.db_pool.clone(),
+            request.to.to_owned(),
+            request.subject.to_owned(),
+            String::from("helloworld"),
+            request.data.to_owned(),
         )
         .await;
 
     match result {
-        Ok(_) => Ok(web::Json(ResponseSuccess {message: String::from("Email successfully sent")})),
+        Ok(()) => Ok(web::Json(ResponseSuccess {
+            message: String::from("Email successfully sent"),
+        })),
         Err(e) => Err(ErrorInternalServerError(e)),
     }
 }
