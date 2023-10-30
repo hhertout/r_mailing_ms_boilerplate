@@ -12,6 +12,7 @@ use lettre::Message;
 use lettre::{transport::smtp::authentication::Credentials, AsyncSmtpTransport, Tokio1Executor};
 use logs::LogsRequest;
 use logs::MailerLogs;
+use sqlx::{Pool, Sqlite};
 
 pub mod config;
 
@@ -82,6 +83,7 @@ impl Mailer {
 
     pub async fn send_email<E>(
         &self,
+        db_pool: Pool<Sqlite>,
         to: String,
         subject: String,
         template_name: String,
@@ -118,7 +120,7 @@ impl Mailer {
                             success: true,
                             error_desc: None
                         };
-                        let _ = MailerLogs::new().await.insert_one(&data).await;
+                        let _ = MailerLogs::new().await.insert_one(db_pool,&data).await;
                     }
                     Err(e) => {
                         let data = LogsRequest {
@@ -128,7 +130,7 @@ impl Mailer {
                             success: false,
                             error_desc: Some(e.to_string())
                         };
-                        let _ = MailerLogs::new().await.insert_one(&data).await;
+                        let _ = MailerLogs::new().await.insert_one(db_pool, &data).await;
                     }
                 }
                 Ok(())
@@ -141,7 +143,7 @@ impl Mailer {
                     success: false,
                     error_desc: Some(e.to_string())
                 };
-                let _ = MailerLogs::new().await.insert_one(&data).await;
+                let _ = MailerLogs::new().await.insert_one(db_pool,&data).await;
                 Err(e)
             }
         }

@@ -1,4 +1,3 @@
-use db::MailerDb;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use sqlx::{Error, Pool, Sqlite};
@@ -24,23 +23,19 @@ pub struct LogsRequest {
 }
 
 #[derive(Clone)]
-pub struct MailerLogs {
-    db_pool: Pool<Sqlite>,
-}
+pub struct MailerLogs;
 
 impl MailerLogs {
     pub async fn new() -> MailerLogs {
-        MailerDb.migrate().await;
-        let db_pool = MailerDb.database_connection().await;
-        MailerLogs { db_pool }
+        MailerLogs
     }
 
-    pub async fn get_logs(&self) -> Result<Vec<Logs>, Error> {
+    pub async fn get_logs(&self, db_pool: Pool<Sqlite>) -> Result<Vec<Logs>, Error> {
         sqlx::query_as::<_, Logs>(r#"SELECT * FROM `logs`"#)
-            .fetch_all(&self.db_pool)
+            .fetch_all(&db_pool)
             .await
     }
-    pub async fn insert_one(&self, logs: &LogsRequest) -> Result<(), sqlx::Error> {
+    pub async fn insert_one(&self,db_pool: Pool<Sqlite> ,logs: &LogsRequest) -> Result<(), sqlx::Error> {
         let res = sqlx::query(
             "INSERT INTO `logs` (`subject`, `to`, `date`, `success`, `error_desc`)
             VALUES ($1, $2, $3, $4, $5)",
@@ -50,7 +45,7 @@ impl MailerLogs {
         .bind(&logs.date)
         .bind(&logs.success)
         .bind(&logs.error_desc)
-        .execute(&self.db_pool)
+        .execute(&db_pool)
         .await;
 
         match res {
