@@ -11,8 +11,9 @@ path = "src/lib.rs"
 [dependencies]
 handlebars = "4.3.7"
 logs = { path = "../logs" }
-lettre = { version = "0.10.4", features = ["tokio1", "tokio1-native-tls"] }
+lettre = { version = "0.11.1", features = ["tokio1", "tokio1-native-tls"] }
 serde = { version = "1.0.187", features = ["derive"] }
 serde_json = "1.0.105"
 tokio = { version = "1.32.0", features = ["full"] }
 chrono = "0.4.31"
+sqlx = { version = "0.7.2", features = [ "runtime-tokio", "tls-native-tls", "sqlite" ] }

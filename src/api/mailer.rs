@@ -32,6 +32,7 @@ async fn hello_world(
     let result = state
         .mailer
         .send_email(
+            state.db_pool.clone(),
             request.to.to_owned(),
             request.subject.to_owned(),
             String::from("helloworld"),

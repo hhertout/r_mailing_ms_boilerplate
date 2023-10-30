@@ -7,7 +7,8 @@ use actix_web::{
     web::{Data, ServiceConfig},
     App, HttpServer,
 };
-use logs::MailerLogs;
+use sqlx::{Pool, Sqlite};
+use logs::db::MailerDb;
 
 pub mod mailer;
 pub mod mailer_logs;
@@ -18,7 +19,7 @@ use self::mailer_logs::get_mailer_logs;
 
 pub struct AppState {
     pub mailer: Mailer,
-    pub mailer_logs: MailerLogs,
+    pub db_pool: Pool<Sqlite>,
 }
 
 fn router(cfg: &mut ServiceConfig) {
@@ -30,7 +31,8 @@ pub async fn init() -> Result<(), Error> {
     let uri = std::env::var("SERVER_URI").unwrap();
     let port = std::env::var("SERVER_PORT").unwrap();
 
-    let mailer_logs = MailerLogs::new().await;
+    MailerDb.migrate().await;
+    let db_pool = MailerDb::new().database_connection().await;
 
     println!("🚀 Server starting at http://{}:{}/", uri, port);
     HttpServer::new(move || {
@@ -39,7 +41,7 @@ pub async fn init() -> Result<(), Error> {
             .wrap(config::cors::config_cors())
             .app_data(Data::new(AppState {
                 mailer: Mailer::new(None),
-                mailer_logs: mailer_logs.clone(),
+                db_pool: db_pool.clone(),
             }))
             .configure(router)
     })
