@@ -14,7 +14,7 @@ impl MailerDb {
         SqlitePoolOptions::new()
             .connect(&db_url)
             .await
-            .unwrap_or_else(|_| panic!("Failed to connect to database"))
+            .unwrap_or_else(|_| panic!("Failed to connect to database. {}", db_url))
     }
 
     pub async fn migrate(&self) {
