@@ -6,6 +6,7 @@ use logs::db::MailerDb;
 #[tokio::test]
 pub async fn query_all_test() {
     env::set_var("DB_URL", "sqlite://../../data/logs_test.db");
+    MailerDb.migrate().await;
     let pool = MailerDb::new().database_connection().await;
     let res = MailerLogs::new().await.get_logs(pool).await;
     assert!(res.is_ok())
@@ -14,6 +15,7 @@ pub async fn query_all_test() {
 #[tokio::test]
 pub async fn insert_one_test() {
     env::set_var("DB_URL", "sqlite://../../data/logs_test.db");
+    MailerDb.migrate().await;
     let pool = MailerDb::new().database_connection().await;
     let logs = LogsRequest {
         subject: String::from("test"),
