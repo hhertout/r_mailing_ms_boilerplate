@@ -34,7 +34,7 @@ pub async fn init() -> Result<(), Error> {
     MailerDb.migrate().await;
     let db_pool = MailerDb::new().database_connection().await;
 
-    println!("🚀 Server starting at http://{}:{}/", uri, port);
+    println!("📡 Server starting at http://{}:{}/", uri, port);
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::new("Request => %s; %a \"%r\" | time => %Dms"))
