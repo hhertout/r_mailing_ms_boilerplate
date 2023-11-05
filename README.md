@@ -1,11 +1,30 @@
-# Rust API microservice for mailing
+<p align="center">
+  <h1 align="center">Mailing MicroService</h1>
+    <p align="center">Rust Mailing microservice boilerplate</p>
+</p>
 
-Developed by myself.
+<p align="center">
+    <img src="https://img.shields.io/github/v/release/hhertout/api_rust_mailer.svg" />
+    <a href="https://github.com/hhertout/rac_tool/actions">
+      <img alt="Tests Passing" src="https://github.com/hhertout/api_rust_mailer/actions/workflows/rust.yml/badge.svg" />
+    </a>
+</p>
 
-Build with Sqlite database for logs.
+## Features
+
+- Expose API endpoint dedicated to the service
+- Build email templates
+- Send dynamic email from templates and values provided
+- Sending history with sqlite database
+
 ## Getting Started
 
-Don't forget to add your ```.env``` at the root with your SMTP logs.
+Before running the application, make sure to copy the `.env.example` file to a new file named `.env`. 
+This file contains important configuration settings for the application. 
+
+Be sure to customize the values in the `.env` file to match your environment and requirements. 
+
+Keeping the `.env.example` file as a template helps ensure that your application has the necessary configuration variables in place.
 
 ### 1 - Create the template
 
@@ -107,14 +126,10 @@ To start docker, just run the following command :
 - dotenvy
 - sqlx
 
-## Dev specs
-
-#### Requirements:
-
-- Without docker : Node js & npm
+## Developement process
 
 To run the app : 
 - ```cargo run```
 
 To watch change in your code, run 
-- ```npx nodemon --watch src -e rs --exec cargo run```.
+- ```cargo watch -x run```.
