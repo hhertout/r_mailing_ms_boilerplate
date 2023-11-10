@@ -21,6 +21,7 @@ struct Req {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 struct ResponseSuccess {
+    status: u8,
     message: String,
 }
 
@@ -42,6 +43,7 @@ async fn hello_world(
 
     match result {
         Ok(()) => Ok(web::Json(ResponseSuccess {
+            status: 201,
             message: String::from("Email successfully sent"),
         })),
         Err(e) => Err(ErrorInternalServerError(e)),

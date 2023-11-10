@@ -2,6 +2,7 @@ use std::env;
 
 use sqlx::{migrate::MigrateDatabase, sqlite::SqlitePoolOptions, Pool, Sqlite};
 
+#[derive(Default)]
 pub struct MailerDb;
 
 impl MailerDb {
