@@ -39,7 +39,7 @@ At the root of the folder, is located the main template you want to create.
 
 ### 2 - Connect it
 
-Go to ```src/api/mailer```, you will find an example of an Api route and handler made to generate template with custom data, and then to send email.
+Go to ```src/controllers/mailer```, you will find an example of an Api route and handler made to generate template with custom data, and then to send email.
 
 #### Example :
 
@@ -54,7 +54,7 @@ struct ErrorResponse { // define error response struct
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
-struct Req { // define the request data structure
+struct Request { // define the request data structure
     to: String,
     subject: String,
     data: Data,
@@ -74,7 +74,7 @@ struct ResponseSuccess { // define the response struct
 #[post("/ping")]
 async fn hello_world(
     state: web::Data<AppState>,
-    request: web::Json<Req>,
+    request: web::Json<Request>,
 ) -> Result<impl Responder> {
     let result = state
         .mailer
@@ -97,7 +97,7 @@ async fn hello_world(
 ````
 ### Expose endpoint
 
-Don't forget to put all your routes in the dedicated function :
+Don't forget to put all your routes in the dedicated function ```src/router``` :
 
 ```rust
 fn router(cfg: &mut ServiceConfig) {

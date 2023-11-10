@@ -2,6 +2,8 @@ use std::{io::Result, env};
 
 pub mod api;
 pub mod config;
+mod router;
+mod controllers;
 
 #[actix_web::main]
 async fn main() -> Result<()>{

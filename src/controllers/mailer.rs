@@ -13,7 +13,7 @@ struct Data {
     text: String,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
-struct Req {
+struct Request {
     to: String,
     subject: String,
     data: Data,
@@ -28,7 +28,7 @@ struct ResponseSuccess {
 #[post("/ping")]
 async fn hello_world(
     state: web::Data<AppState>,
-    request: web::Json<Req>,
+    request: web::Json<Request>,
 ) -> Result<impl Responder> {
     let result = state
         .mailer
@@ -43,7 +43,7 @@ async fn hello_world(
 
     match result {
         Ok(()) => Ok(web::Json(ResponseSuccess {
-            status: 201,
+            status: 200,
             message: String::from("Email successfully sent"),
         })),
         Err(e) => Err(ErrorInternalServerError(e)),
