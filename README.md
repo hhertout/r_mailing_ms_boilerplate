@@ -133,3 +133,19 @@ To run the app :
 
 To watch change in your code, run 
 - ```cargo watch -x run```.
+
+## Logs & Sqlite configuration
+
+Logs are available with sqlx.
+It saves all sending requests with the result.
+
+### Migrations
+
+Migration are located on ```/services/logs/migrations```.
+
+To create a new migration, go on ```/services/logs/migrations``` and run 
+```bash
+sqlx migrate add <DESCRIPTION>
+```
+
+The migration files were executed at server startup. 
