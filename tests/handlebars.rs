@@ -1,6 +1,6 @@
 use handlebars::Handlebars;
-use mailer::Mailer;
 use serde::Serialize;
+use rust_mailer::services::mailer::Mailer;
 
 // Base handlebar tests
 #[test]

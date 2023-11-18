@@ -1,7 +1,6 @@
 use std::env;
-
-use logs::{LogsRequest, MailerLogs};
-use logs::db::MailerDb;
+use rust_mailer::services::logs::db::MailerDb;
+use rust_mailer::services::logs::{LogsRequest, MailerLogs};
 
 #[tokio::test]
 pub async fn query_all_test() {
