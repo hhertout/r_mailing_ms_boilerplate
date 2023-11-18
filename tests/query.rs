@@ -4,7 +4,7 @@ use rust_mailer::services::logs::{LogsRequest, MailerLogs};
 
 #[tokio::test]
 pub async fn query_all_test() {
-    env::set_var("DB_URL", "sqlite://../../data/logs_test.db");
+    env::set_var("DB_URL", "sqlite://./data/logs_test.db");
     MailerDb.migrate().await;
     let pool = MailerDb::new().database_connection().await;
     let res = MailerLogs::new().await.get_logs(pool).await;
@@ -13,7 +13,7 @@ pub async fn query_all_test() {
 
 #[tokio::test]
 pub async fn insert_one_test() {
-    env::set_var("DB_URL", "sqlite://../../data/logs_test.db");
+    env::set_var("DB_URL", "sqlite://./data/logs_test.db");
     MailerDb.migrate().await;
     let pool = MailerDb::new().database_connection().await;
     let logs = LogsRequest {
