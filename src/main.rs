@@ -5,6 +5,7 @@ mod config;
 mod router;
 mod controllers;
 mod services;
+mod middleware;
 
 #[actix_web::main]
 async fn main() -> Result<()>{
