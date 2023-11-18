@@ -40,13 +40,13 @@ impl MailerLogs {
             "INSERT INTO `logs` (`subject`, `to`, `date`, `success`, `error_desc`)
             VALUES ($1, $2, $3, $4, $5)",
         )
-        .bind(&logs.subject)
-        .bind(&logs.to)
-        .bind(&logs.date)
-        .bind(&logs.success)
-        .bind(&logs.error_desc)
-        .execute(&db_pool)
-        .await;
+            .bind(&logs.subject)
+            .bind(&logs.to)
+            .bind(&logs.date)
+            .bind(&logs.success)
+            .bind(&logs.error_desc)
+            .execute(&db_pool)
+            .await;
 
         match res {
             Ok(_) => Ok(()),

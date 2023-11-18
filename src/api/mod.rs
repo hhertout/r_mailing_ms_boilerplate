@@ -1,15 +1,15 @@
 use std::io::Error;
 
 use crate::config;
-use ::mailer::Mailer;
 use actix_web::{
     middleware::Logger,
     web::{Data},
     App, HttpServer,
 };
 use sqlx::{Pool, Sqlite};
-use logs::db::MailerDb;
 use crate::router::router;
+use crate::services::logs::db::MailerDb;
+use crate::services::mailer::Mailer;
 
 
 pub struct AppState {
@@ -25,7 +25,7 @@ pub async fn init() -> Result<(), Error> {
     MailerDb.migrate().await;
     let db_pool = MailerDb::new().database_connection().await;
 
-    println!("📡 Server starting at http://{}:{}/", uri, port);
+    println!("📡 Server listening on port {}", port);
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::new("Request => %s; %a \"%r\" | time => %Dms"))
