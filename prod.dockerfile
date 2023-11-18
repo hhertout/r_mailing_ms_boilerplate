@@ -1,8 +1,10 @@
-FROM rust:latest-alpine
+FROM rust:1.74.0
 
 WORKDIR /usr/src/app
 
-RUN apk --update-cache add sqlite
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN apt-get install -y sqlite3 libsqlite3-dev
 
 COPY . .
 
