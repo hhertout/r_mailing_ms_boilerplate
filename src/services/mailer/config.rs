@@ -11,23 +11,23 @@ pub struct Config {
 impl Config {
     pub fn new() -> Config {
         let from =
-            std::env::var("SMTP_FROM").unwrap_or_else(|_| panic!("Failed to load env variable"));
+            std::env::var("SMTP_FROM").expect("SMTP_FROM env variable is not set");
         let from_name_res = std::env::var("SMTP_FROM_NAME");
         let from_name = match from_name_res {
             Ok(from_name) => Some(from_name),
             Err(_) => None,
         };
-        let user = std::env::var("SMTP_USER").expect("STMP_USER must be set");
-        let password = std::env::var("SMTP_PASSWORD").expect("SMTP_PASSWORD must be set");
-        let host = std::env::var("SMTP_HOST").expect("SMTP_HOST must be set");
-        let port = std::env::var("SMTP_PORT").expect("SMTP_PORT must be set");
+        let user = std::env::var("SMTP_USER").expect("SMTP_USER env variable is not set");
+        let password = std::env::var("SMTP_PASSWORD").expect("SMTP_PASSWORD env variable is not set");
+        let host = std::env::var("SMTP_HOST").expect("SMTP_HOST env variable is not set");
+        let port = std::env::var("SMTP_PORT").expect("SMTP_PORT env variable is not set");
         Config {
             from,
             from_name,
             user,
             password,
             host,
-            port: port.parse::<u16>().unwrap(),
+            port: port.parse::<u16>().expect("Failed to parse port"),
         }
     }
 }
