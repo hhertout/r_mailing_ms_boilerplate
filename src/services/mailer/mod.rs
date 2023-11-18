@@ -1,18 +1,19 @@
 use core::panic;
-
-use crate::config::Config;
+use sqlx::{Pool, Sqlite};
+use crate::services::logs::{LogsRequest, MailerLogs};
+use crate::services::mailer::config::Config;
 use chrono::Local;
+use lettre::message::header::ContentType;
+use lettre::Address;
+use lettre::message::Mailbox;
+use lettre::Message;
 use handlebars::Handlebars;
 use handlebars::RenderError;
-use lettre::message::header::ContentType;
-use lettre::message::Mailbox;
-use lettre::Address;
+use lettre::Tokio1Executor;
+use lettre::AsyncSmtpTransport;
+use lettre::transport::smtp::authentication::Credentials;
 use lettre::AsyncTransport;
-use lettre::Message;
-use lettre::{transport::smtp::authentication::Credentials, AsyncSmtpTransport, Tokio1Executor};
-use logs::LogsRequest;
-use logs::MailerLogs;
-use sqlx::{Pool, Sqlite};
+
 
 pub mod config;
 
@@ -27,7 +28,7 @@ impl Mailer {
             config: Config::new(),
             template_path: match template_path {
                 Some(path) => path,
-                None => String::from("services/mailer/templates"),
+                None => String::from("templates"),
             },
         }
     }
@@ -50,8 +51,8 @@ impl Mailer {
     // TODO - Check if data sent is valid
 
     pub fn render_templates<E>(&self, data: E, template_name: &str) -> Result<String, RenderError>
-    where
-        E: serde::ser::Serialize,
+        where
+            E: serde::ser::Serialize,
     {
         let mut handlebars = Handlebars::new();
         handlebars
@@ -89,8 +90,8 @@ impl Mailer {
         template_name: String,
         template_data: E,
     ) -> Result<(), lettre::transport::smtp::Error>
-    where
-        E: serde::ser::Serialize,
+        where
+            E: serde::ser::Serialize,
     {
         let html_template = self
             .render_templates(template_data, &template_name)

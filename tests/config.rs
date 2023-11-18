@@ -1,6 +1,5 @@
 use std::env;
-
-use mailer::config::Config;
+use rust_mailer::services::mailer::config::Config;
 
 #[test]
 pub fn config_new() {

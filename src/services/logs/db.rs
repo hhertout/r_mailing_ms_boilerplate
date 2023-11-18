@@ -2,11 +2,12 @@ use std::env;
 
 use sqlx::{migrate::MigrateDatabase, sqlite::SqlitePoolOptions, Pool, Sqlite};
 
+#[derive(Default)]
 pub struct MailerDb;
 
 impl MailerDb {
     pub fn new() -> MailerDb {
-        return MailerDb;
+        MailerDb
     }
 
     pub async fn database_connection(&self) -> Pool<Sqlite> {
@@ -20,7 +21,7 @@ impl MailerDb {
     pub async fn migrate(&self) {
         let _ = &self.create_database().await;
         let pool = &self.database_connection().await;
-        let _ = &self.create_logs_table(pool).await;
+        let _ = &self.migrations_migrate(pool).await;
     }
 
     async fn create_database(&self) {
@@ -33,19 +34,10 @@ impl MailerDb {
         }
     }
 
-    async fn create_logs_table(&self, pool: &Pool<Sqlite>) {
-        let _ = sqlx::query(
-            "CREATE TABLE IF NOT EXISTS `logs` (
-                `_id` integer primary key AUTOINCREMENT not null,
-                `subject` varchar(255) not null,
-                `to` varchar(255) not null, 
-                `date` date not null, 
-                `success` boolean not null,
-                `error_desc` text
-        );",
-        )
-        .execute(pool)
-        .await
-        .unwrap();
+    async fn migrations_migrate(&self, pool: &Pool<Sqlite>) {
+        sqlx::migrate!()
+            .run(pool)
+            .await
+            .unwrap_or_else(|err| panic!("Migration failed : {:?}", err))
     }
 }

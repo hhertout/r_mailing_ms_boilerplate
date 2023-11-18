@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Config {
     pub from: String,
     pub from_name: Option<String>,

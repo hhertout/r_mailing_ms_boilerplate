@@ -1,11 +1,26 @@
-FROM rust:latest-alpine
+FROM rust:1.74.0 as builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-RUN apk --update-cache add sqlite
+RUN apt-get -y update
+RUN apt-get -y upgrade
+
 
 COPY . .
 
-RUN cargo install --path .
+RUN cargo build --release
 
-CMD ["rust_mailer"]
+FROM ubuntu:22.04
+
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN apt-get install -y sqlite3 libsqlite3-dev
+
+WORKDIR /app
+
+RUN mkdir data
+
+COPY --from=builder /app/target/release/rust_mailer .
+COPY ./templates ./templates
+
+CMD ["./rust_mailer"]

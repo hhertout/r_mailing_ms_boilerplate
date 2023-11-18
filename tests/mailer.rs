@@ -1,4 +1,4 @@
-use mailer::Mailer;
+use rust_mailer::services::mailer::Mailer;
 
 #[test]
 fn mailer_new() {
@@ -22,7 +22,7 @@ fn mailer_new() {
     assert_eq!(mailer.config.port, port.parse::<u16>().unwrap());
     assert_eq!(
         mailer.template_path,
-        String::from("services/mailer/templates")
+        String::from("templates")
     );
 }
 

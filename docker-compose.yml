@@ -4,10 +4,10 @@ services:
         build:
             context: .
             dockerfile: dev.dockerfile
-            # dockerfile: prod.dockerfile # uncomment this line for production build
+            #dockerfile: prod.dockerfile # uncomment this line for production build
         restart: always
         ports:
-            - 4000:4000
+            - 4000:4567
         volumes:
           - .:/usr/src/app
         env_file:
